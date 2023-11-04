@@ -45,11 +45,38 @@ router.get("/:contactId", async (req, res, next) => {
   }
 });
 
+// router.post("/", async (req, res, next) => {
+//   try {
+//     const { error } = contactSchema.validate(req.body);
+//     if (error) {
+//       const missingKeys = error.details.map((detail) => detail.context.key);
+//       return res.status(404).json({ message: `missing required ${missingKeys} field` });
+
+//     }
+//     const result = await contacts.addContact(req.body);
+//     res.status(201).json(result);
+
+//     console.log(req.body);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
 router.post("/", async (req, res, next) => {
   try {
-    const { error } = contactSchema.validate(req.body);
+    const { name, email, phone } = req.body;
+    const { error } = contactSchema.validate({ name, email, phone });
     if (error) {
-      throw HttpError(400, error.message);
+      switch (error.details[0].context.key) {
+        case "name":
+          return res.status(400).json({ message: "missing required Name field" });
+        case "email":
+          return res.status(400).json({ message: "missing required Email field" });
+        case "phone":
+          return res.status(400).json({ message: "missing required Phone field" });
+        default:
+          return res.status(400).json({ message: "Something went wrong" });
+      }
     }
     const result = await contacts.addContact(req.body);
     res.status(201).json(result);
@@ -67,7 +94,7 @@ router.delete("/:contactId", async (req, res, next) => {
     if (!result) {
       throw HttpError(404, "Contact not found");
     }
-    res.status({ message: "Delete succes" }).json(result);
+    res.status({ message: "Contact deleted" }).json(result);
   } catch (error) {
     next(error);
   }
@@ -77,7 +104,7 @@ router.put("/:contactId", async (req, res, next) => {
   try {
     const { error } = contactSchema.validate(req.body);
     if (error) {
-      throw HttpError(400, error.message);
+      throw HttpError({ status: 400, message: "missing fields" });
     }
 
     const { contactId } = req.params;
