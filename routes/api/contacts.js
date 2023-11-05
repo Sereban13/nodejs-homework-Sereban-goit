@@ -1,20 +1,21 @@
 const express = require("express");
-const Joi = require("joi");
+// const Joi = require("joi");
 //
 const contacts = require("../../models/contacts");
 const { HttpError } = require("../../helpers");
+const contactSchema = require("../../utils/validation/contactValidationSchema");
 
 const router = express.Router();
 
-const contactSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-    .required(),
-  phone: Joi.string()
-    .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
-    .required(),
-});
+// const contactSchema = Joi.object({
+//   name: Joi.string().required(),
+//   email: Joi.string()
+//     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+//     .required(),
+//   phone: Joi.string()
+//     .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
+//     .required(),
+// });
 
 router.get("/", async (req, res, next) => {
   try {
