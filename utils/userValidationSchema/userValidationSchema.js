@@ -7,7 +7,7 @@ const emailRegExp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 const registerSchema = Joi.object({
   email: Joi.string().pattern(emailRegExp).required(),
   password: Joi.string().min(6).required(),
-  //   subscription: Joi.string().validate(subList),
+  subscription: Joi.string(),
 });
 
 const loginSchema = Joi.object({
