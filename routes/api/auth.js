@@ -2,7 +2,7 @@ const express = require("express");
 
 const controllers = require("../../controllers/auth");
 
-const { validateBody } = require("../../middlewares");
+const { validateBody, authenticate } = require("../../middlewares");
 
 const schemas = require("../../utils/userValidationSchema/userValidationSchema");
 
@@ -13,5 +13,11 @@ router.post("/register", validateBody(schemas.registerSchema), controllers.regis
 
 // sign-in
 router.post("/login", validateBody(schemas.loginSchema), controllers.login);
+
+// current
+router.get("/current", authenticate, controllers.getCurrent);
+
+// logout
+router.post("/logout", authenticate, controllers.logout);
 
 module.exports = router;
